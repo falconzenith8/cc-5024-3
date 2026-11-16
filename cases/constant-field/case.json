@@ -1,0 +1,19 @@
+{
+  "case": "constant-field",
+  "description": "Uniform intensity 12.5 on 16x16. Resampling any grid must return 12.5 exactly with coverage 1 where a cell is fully inside the source.",
+  "synthetic": true,
+  "width": 16,
+  "height": 16,
+  "maskPresent": false,
+  "expected": {
+    "allValidCellsIntensity": 12.5,
+    "allValidCellsCoverage": 1,
+    "note": "NaN only for every cell with coverage 0."
+  },
+  "gridSuggestion": {
+    "width": 7,
+    "height": 5
+  },
+  "semanticsSuggestion": "mean",
+  "createdAt": "2026-11-16T02:59:29.982Z"
+}

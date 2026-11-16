@@ -1,0 +1,18 @@
+{
+  "case": "known-integral-spot",
+  "description": "Discrete Gaussian spot on 32x32 centered at (15.5,15.5), sigma=3.5, peak 1000. Sum mode at 64x64 must reproduce the discrete total.",
+  "synthetic": true,
+  "width": 32,
+  "height": 32,
+  "maskPresent": false,
+  "expected": {
+    "discreteTotal": 76968.327374074,
+    "toleranceRelative": 1e-12
+  },
+  "gridSuggestion": {
+    "width": 64,
+    "height": 64
+  },
+  "semanticsSuggestion": "sum",
+  "createdAt": "2026-11-16T02:59:29.984Z"
+}

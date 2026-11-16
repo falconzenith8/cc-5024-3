@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Quantitative Float Resampler — microscopy page</title>
+<link rel="stylesheet" href="./style.css">
+</head>
+<body>
+<header class="topbar">
+  <div class="brand">
+    <strong>Quantitative Float Resampler</strong>
+    <span class="subtitle">area-weighted resampling · independent validity mask · floating-point output</span>
+  </div>
+  <div class="mode-badge" id="modeBadge">no result</div>
+</header>
+
+<div class="layout">
+  <!-- ============ LEFT: controls ============ -->
+  <aside class="panel controls">
+    <section>
+      <h2>1 · Data</h2>
+      <div class="file-row">
+        <label class="btn">Load values (.npy / .tiff)
+          <input id="valuesFile" type="file" accept=".npy,.tif,.tiff,application/octet-stream" hidden>
+        </label>
+      </div>
+      <div class="file-row">
+        <label class="btn secondary">Load mask (.npy, 0=invalid)
+          <input id="maskFile" type="file" accept=".npy,application/octet-stream" hidden>
+        </label>
+      </div>
+      <div class="row">
+        <label>Bundled cases</label>
+        <select id="caseSelect">
+          <option value="">— choose —</option>
+        </select>
+        <button id="loadCase" class="btn small">Load</button>
+      </div>
+      <p class="hint" id="dataInfo">No image loaded. Load a float .npy or uncompressed float TIFF, or pick a bundled synthetic case.</p>
+    </section>
+
+    <section>
+      <h2>2 · Effective area (mask)</h2>
+      <p class="hint">Pixels with mask = 0 are excluded. NaN/Inf are always excluded, even inside the mask. Excluded samples never enter the mean; they are not replaced by zero.</p>
+      <div class="row">
+        <label>Draw</label>
+        <select id="maskTool">
+          <option value="none">no drawing</option>
+          <option value="include">include (rect)</option>
+          <option value="exclude">exclude (rect)</option>
+          <option value="includeEllipse">include (ellipse)</option>
+          <option value="excludeEllipse">exclude (ellipse)</option>
+        </select>
+      </div>
+      <div class="row">
+        <button id="maskAll" class="btn small secondary">Select all</button>
+        <button id="maskNone" class="btn small secondary">Clear all</button>
+        <button id="maskFinite" class="btn small secondary">Finite only</button>
+        <button id="maskInvert" class="btn small secondary">Invert</button>
+      </div>
+      <p class="hint" id="maskInfo">mask: all valid</p>
+    </section>
+
+    <section>
+      <h2>3 · Output grid</h2>
+      <div class="grid2">
+        <label>Width <input id="outWidth" type="number" min="1" step="1" value="0"></label>
+        <label>Height <input id="outHeight" type="number" min="1" step="1" value="0"></label>
+      </div>
+      <div class="row">
+        <label class="inline"><input id="useExtent" type="checkbox"> crop extent</label>
+      </div>
+      <div class="grid4" id="extentRow" hidden>
+        <label>x0 <input id="extX0" type="number" step="0.01"></label>
+        <label>y0 <input id="extY0" type="number" step="0.01"></label>
+        <label>x1 <input id="extX1" type="number" step="0.01"></label>
+        <label>y1 <input id="extY1" type="number" step="0.01"></label>
+      </div>
+      <div class="row">
+        <label>Presets</label>
+        <button class="btn small secondary" data-scale="0.5">½×</button>
+        <button class="btn small secondary" data-scale="1">1×</button>
+        <button class="btn small secondary" data-scale="2">2×</button>
+        <button class="btn small secondary" data-scale="4">4×</button>
+      </div>
+    </section>
+
+    <section>
+      <h2>4 · Quantity semantics</h2>
+      <div class="radio-block">
+        <label class="radio">
+          <input type="radio" name="mode" value="mean" checked>
+          <span><strong>Mean intensity</strong><br><small>area-weighted mean of usable samples · intensity units</small></span>
+        </label>
+        <label class="radio">
+          <input type="radio" name="mode" value="sum">
+          <span><strong>Integrated total</strong><br><small>Σ value × overlap area · intensity × pixel-area units</small></span>
+        </label>
+      </div>
+      <label class="inline"><input id="compensate" type="checkbox" disabled> divide by coverage (estimate, not conserved)</label>
+      <div class="row">
+        <label>Source pixel area</label>
+        <input id="pixelArea" type="number" min="0.000001" step="0.01" value="1">
+      </div>
+      <p class="hint" id="semanticsHint">Mean intensity and integrated total are different quantities. A resampled mean is not a conserved total.</p>
+    </section>
+
+    <section>
+      <h2>5 · Display (not saved data)</h2>
+      <div class="row">
+        <label>Field palette</label>
+        <select id="palette">
+          <option value="gray">gray</option>
+          <option value="viridis">viridis</option>
+          <option value="inferno">inferno</option>
+        </select>
+      </div>
+      <div class="row">
+        <label>Scale</label>
+        <select id="scale">
+          <option value="linear">linear</option>
+          <option value="log">log10</option>
+          <option value="gamma">gamma</option>
+        </select>
+      </div>
+      <div class="grid2">
+        <label>Low % <input id="lowPct" type="number" min="0" max="100" step="0.5" value="0"></label>
+        <label>High % <input id="highPct" type="number" min="0" max="100" step="0.5" value="100"></label>
+      </div>
+      <div class="row">
+        <label>Coverage threshold <input id="lowCoverage" type="number" min="0" max="1" step="0.05" value="0.5"></label>
+      </div>
+      <p class="hint">The on-screen image is an 8-bit preview only. Every numeric readout and every download below uses the float arrays.</p>
+    </section>
+
+    <div class="run-row">
+      <button id="runBtn" class="btn primary" disabled>Resample</button>
+      <button id="exampleBtn" class="btn secondary">Run ½× example</button>
+    </div>
+    <div id="errorBox" class="error-box" hidden></div>
+  </aside>
+
+  <!-- ============ CENTER: canvases ============ -->
+  <main class="panel canvas-area">
+    <div class="canvas-toolbar">
+      <div class="layer-toggle">
+        <strong>Source</strong>
+        <label class="inline"><input type="checkbox" id="showSource" checked> show</label>
+        <label class="inline"><input type="checkbox" id="showSourceMask" checked> mask overlay</label>
+      </div>
+      <div class="layer-toggle">
+        <strong>Result</strong>
+        <label class="inline"><input type="checkbox" id="showResult" checked> float field</label>
+        <label class="inline"><input type="checkbox" id="showCoverage" checked> coverage weights</label>
+      </div>
+      <div class="zoom-row">
+        <label>Zoom <input id="zoom" type="range" min="1" max="12" step="0.5" value="1"></label>
+        <span id="zoomLabel">1×</span>
+      </div>
+    </div>
+
+    <div class="canvas-stack">
+      <figure class="canvas-figure">
+        <figcaption>
+          <span>Source (display preview)</span>
+          <span class="legend" id="sourceLegend"></span>
+        </figcaption>
+        <div class="canvas-wrap" id="sourceWrap">
+          <canvas id="sourceCanvas" width="512" height="512"></canvas>
+          <div class="draw-hint" id="drawHint" hidden>drag to draw mask</div>
+        </div>
+      </figure>
+      <figure class="canvas-figure">
+        <figcaption>
+          <span>Result — float field</span>
+          <span class="legend" id="fieldLegend">no result</span>
+        </figcaption>
+        <div class="canvas-wrap" id="resultWrap">
+          <canvas id="resultCanvas" width="512" height="512"></canvas>
+        </div>
+      </figure>
+      <figure class="canvas-figure">
+        <figcaption>
+          <span>Coverage weights (valid-overlap fraction)</span>
+          <span class="legend" id="covLegend">no result</span>
+        </figcaption>
+        <div class="canvas-wrap" id="coverageWrap">
+          <canvas id="coverageCanvas" width="512" height="512"></canvas>
+        </div>
+      </figure>
+    </div>
+    <p class="hint">Click any result pixel to inspect its exact float values and coverage. The three panels share one view transform while zoomed.</p>
+  </main>
+
+  <!-- ============ RIGHT: inspector + outputs ============ -->
+  <aside class="panel inspector">
+    <section>
+      <h2>Pixel inspector</h2>
+      <div id="inspectBox" class="inspect-box">Click a result pixel.</div>
+    </section>
+
+    <section>
+      <h2>Result summary</h2>
+      <div id="summaryBox" class="summary-box">No result yet.</div>
+    </section>
+
+    <section>
+      <h2>Anomalies &amp; diagnostics</h2>
+      <div id="anomalyBox" class="anomaly-box">None.</div>
+    </section>
+
+    <section>
+      <h2>Download (float, full precision)</h2>
+      <div class="download-col">
+        <button id="dlIntensityNpy" class="btn small" disabled>intensity.npy (float64)</button>
+        <button id="dlIntensityNpy32" class="btn small secondary" disabled>intensity.npy (float32)</button>
+        <button id="dlCoverageNpy" class="btn small" disabled>coverage.npy (float64)</button>
+        <button id="dlWeightNpy" class="btn small secondary" disabled>valid_weight.npy (float64)</button>
+        <button id="dlCsv" class="btn small secondary" disabled>cells.csv (full precision)</button>
+        <button id="dlMeta" class="btn small secondary" disabled>meta.json (provenance)</button>
+        <button id="dlIntensityTiff" class="btn small secondary" disabled>intensity.tiff (float32)</button>
+      </div>
+      <p class="hint">Downloads are the quantitative deliverable. The canvas above is not.</p>
+    </section>
+
+    <section>
+      <h2>Ground truth check</h2>
+      <button id="selfCheck" class="btn small secondary" disabled>Compare vs. reference</button>
+      <div id="selfCheckBox" class="summary-box">Run a resample first.</div>
+    </section>
+  </aside>
+</div>
+
+<footer class="footer">
+  <span>All bundled cases are synthetic. This tool reports measurements and coverage; it makes no biological diagnosis.</span>
+  <span id="algoTag"></span>
+</footer>
+
+<script type="module" src="./main.js"></script>
+</body>
+</html>

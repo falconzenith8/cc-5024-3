@@ -1,0 +1,78 @@
+{
+  "note": "All cases are synthetic. They exercise resampling behaviour only and support no biological interpretation.",
+  "generatedAt": "2026-11-16T02:59:29.990Z",
+  "cases": [
+    {
+      "name": "constant-field",
+      "description": "Uniform intensity 12.5 on 16x16. Resampling any grid must return 12.5 exactly with coverage 1 where a cell is fully inside the source.",
+      "width": 16,
+      "height": 16,
+      "maskPresent": false,
+      "gridSuggestion": {
+        "width": 7,
+        "height": 5
+      },
+      "semanticsSuggestion": "mean"
+    },
+    {
+      "name": "known-integral-spot",
+      "description": "Discrete Gaussian spot on 32x32 centered at (15.5,15.5), sigma=3.5, peak 1000. Sum mode at 64x64 must reproduce the discrete total.",
+      "width": 32,
+      "height": 32,
+      "maskPresent": false,
+      "gridSuggestion": {
+        "width": 64,
+        "height": 64
+      },
+      "semanticsSuggestion": "sum"
+    },
+    {
+      "name": "partial-mask",
+      "description": "Ramp 0..100 over 24x24 with an invalid circular hole and a masked-out corner. Coverage must be reported per cell; missing cells are NaN.",
+      "width": 24,
+      "height": 24,
+      "maskPresent": true,
+      "gridSuggestion": {
+        "width": 8,
+        "height": 8
+      },
+      "semanticsSuggestion": "mean"
+    },
+    {
+      "name": "extreme-dynamic-range",
+      "description": "Field spanning 1e-12 to 1e6, including exact zeros and a few NaN pixels. Tests that no FLOAT32 conversion happens before statistics.",
+      "width": 20,
+      "height": 20,
+      "maskPresent": false,
+      "gridSuggestion": {
+        "width": 6,
+        "height": 6
+      },
+      "semanticsSuggestion": "mean"
+    },
+    {
+      "name": "zero-vs-missing",
+      "description": "Left half is real zeros, right half is masked non-zero values. A cell spanning both must average to 0 (real zero), coverage 0.5, not 0.5*value.",
+      "width": 8,
+      "height": 4,
+      "maskPresent": true,
+      "gridSuggestion": {
+        "width": 1,
+        "height": 1
+      },
+      "semanticsSuggestion": "mean"
+    },
+    {
+      "name": "float32-tiff",
+      "description": "Same spot field saved as uncompressed float32 TIFF for testing TIFF loading. Values are quantized to float32, which is recorded as a known precision limit.",
+      "width": 24,
+      "height": 24,
+      "maskPresent": false,
+      "gridSuggestion": {
+        "width": 12,
+        "height": 12
+      },
+      "semanticsSuggestion": "mean"
+    }
+  ]
+}

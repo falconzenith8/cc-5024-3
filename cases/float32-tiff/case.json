@@ -1,0 +1,22 @@
+{
+  "case": "float32-tiff",
+  "description": "Same spot field saved as uncompressed float32 TIFF for testing TIFF loading. Values are quantized to float32, which is recorded as a known precision limit.",
+  "synthetic": true,
+  "width": 24,
+  "height": 24,
+  "maskPresent": false,
+  "expected": {
+    "note": "TIFF loading quantizes to float32; use the .npy for exact recomputation."
+  },
+  "gridSuggestion": {
+    "width": 12,
+    "height": 12
+  },
+  "semanticsSuggestion": "mean",
+  "createdAt": "2026-11-16T02:59:29.987Z",
+  "files": [
+    "values.npy",
+    "values-float32.tiff",
+    "case.json"
+  ]
+}

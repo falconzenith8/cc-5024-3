@@ -1,0 +1,17 @@
+{
+  "case": "partial-mask",
+  "description": "Ramp 0..100 over 24x24 with an invalid circular hole and a masked-out corner. Coverage must be reported per cell; missing cells are NaN.",
+  "synthetic": true,
+  "width": 24,
+  "height": 24,
+  "maskPresent": true,
+  "expected": {
+    "note": "Cells overlapping the hole or the corner must have coverage < 1. Fully empty cells must be NaN. The mean of any cell uses only valid samples, never a filled-in zero."
+  },
+  "gridSuggestion": {
+    "width": 8,
+    "height": 8
+  },
+  "semanticsSuggestion": "mean",
+  "createdAt": "2026-11-16T02:59:29.985Z"
+}
