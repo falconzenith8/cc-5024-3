@@ -5,7 +5,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { parseNpy } from '../core/npy.js';
-import { resample, describeResult } from '../core/resample.js';
+import { resample } from '../core/resample.js';
 import {
   resultToCsv,
   resultToJson,

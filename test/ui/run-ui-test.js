@@ -475,6 +475,70 @@ await step('mean mode stays exact after masking, and 8-bit preview is not the so
   assert.ok(out.allEqual, 'remaining fully covered cells must still be exactly 12.5');
 });
 
+await step('all-missing contract: every cell is NaN and the page reports NO_VALID_SAMPLES, never zeros', async () => {
+  // Build an all-missing array in the page (half masked, half NaN) without
+  // touching the kernel: drive only UI controls, then read the kernel result.
+  await page.evaluate(() => {
+    const { setImage, setMask } = window.__resamplerCore;
+    const values = new Float64Array([1, 2, NaN, NaN]);
+    const s = window.__resampler.state;
+    setImage(s, { data: values, width: 4, height: 1, dtype: '<f8', dtypeKind: 'float', sourceName: 'all-missing' });
+    setMask(s, new Uint8Array([0, 0, 1, 1]), 'contract all missing');
+    s.grid = { width: 2, height: 1, extent: null };
+  });
+  await page.click('#runBtn');
+  await page.waitForFunction(() => window.__resampler.state.result !== null);
+  const out = await page.evaluate(() => {
+    const r = window.__resampler.state.result;
+    return {
+      intensities: Array.from(r.intensity),
+      coverage: Array.from(r.coverage),
+      validWeight: Array.from(r.validWeight),
+      undefined: r.stats.undefinedCells,
+      validPixels: r.stats.validPixels,
+      sourceMean: r.stats.sourceMean,
+      outputMean: r.stats.outputMean,
+      validMin: r.stats.validMin,
+      anomalyText: document.getElementById('anomalyBox').textContent,
+    };
+  });
+  assert.equal(out.validPixels, 0);
+  assert.equal(out.undefined, 2);
+  for (const v of out.intensities) assert.ok(Number.isNaN(v), 'all-missing cells must be NaN, not zero');
+  for (const c of out.coverage) assert.equal(c, 0);
+  for (const w of out.validWeight) assert.equal(w, 0);
+  assert.ok(Number.isNaN(out.sourceMean) && Number.isNaN(out.outputMean));
+  assert.equal(out.validMin, null);
+  assert.match(out.anomalyText, /NO_VALID_SAMPLES/);
+});
+
+await step('sparse valid region: empty cell is NaN next to a half-covered finite cell', async () => {
+  await page.evaluate(() => {
+    const s = window.__resampler.state;
+    const { setImage, setMask } = window.__resamplerCore;
+    setImage(s, { data: new Float64Array([7, 7, 9, 7]), width: 4, height: 1, dtype: '<f8', dtypeKind: 'float', sourceName: 'sparse' });
+    setMask(s, new Uint8Array([0, 0, 1, 0]), 'one valid pixel');
+    s.grid = { width: 2, height: 1, extent: null };
+  });
+  await page.click('#runBtn');
+  await page.waitForFunction(() => window.__resampler.state.result !== null);
+  const out = await page.evaluate(() => {
+    const r = window.__resampler.state.result;
+    return {
+      intensities: Array.from(r.intensity),
+      coverage: Array.from(r.coverage),
+      undefined: r.stats.undefinedCells,
+      anomalyText: document.getElementById('anomalyBox').textContent,
+    };
+  });
+  assert.ok(Number.isNaN(out.intensities[0]), 'empty cell is NaN');
+  assert.equal(out.coverage[0], 0);
+  assert.equal(out.intensities[1], 9);
+  assert.ok(Math.abs(out.coverage[1] - 0.5) < 1e-12);
+  assert.equal(out.undefined, 1);
+  assert.match(out.anomalyText, /UNDEFINED_OUTPUT_CELLS/);
+});
+
 await step('no console errors were logged during the run', async () => {
   assert.deepEqual(consoleErrors, [], `console errors: ${consoleErrors.join(' | ')}`);
 });

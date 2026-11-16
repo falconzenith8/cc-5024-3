@@ -46,6 +46,45 @@ the float results.
 6. **Download the floats.** Downloads are the quantitative deliverable
    (§5). The on-screen image is not.
 
+### Starting the page and driving a resample from the kernel
+
+The graphical page is started from the repository root — a script alone is
+not the deliverable; the resampler is operated through this page:
+
+```bash
+npm start          # then open http://127.0.0.1:4173/
+```
+
+1. In **1 · Data**, load a float `.npy`/`.tiff` or pick a bundled case from
+   the dropdown and press **Load**.
+2. In **2 · Effective area (mask)**, choose the valid region: **Select all**,
+   **Clear all**, **Finite only** (drop NaN/Inf), **Invert**, load a 0/1
+   mask `.npy`, or draw include/exclude rectangles and ellipses on the
+   source canvas. The readout under the buttons shows valid vs. excluded
+   pixel counts. Mask `0` means invalid; excluded samples never become zero
+   fills (see §3 and `docs/VALIDITY-CONTRACT.md`).
+3. In **3 · Output grid**, set width/height (or a ½×/1×/2×/4× preset) and an
+   optional crop extent.
+4. In **4 · Quantity semantics**, pick **Mean intensity** or **Integrated
+   total** (and coverage compensation only if an estimate is wanted).
+5. Press **Resample**. The button calls the same `resample()` kernel the CLI
+   and the contract checks use; the page contains no second numeric
+   implementation.
+6. Cross-check the two result canvases against each other: the **float
+   field** panel renders `result.intensity` (undefined cells transparent),
+   while the **coverage weights** panel renders `result.coverage`
+   independently — red below the coverage threshold, green at full coverage,
+   purple for undefined (`NaN`, never black). Clicking a cell shows its exact
+   intensity, coverage, valid weight and overlap sum in the inspector, so a
+   partial-coverage mean can be traced to the usable samples only. The
+   **Ground truth check** button runs the independent scatter reference.
+7. Any failure is surfaced back on this page, not swallowed: invalid grid
+   input appears in the red error box and blocks the run, while data
+   anomalies (`NO_VALID_SAMPLES`, `UNDEFINED_OUTPUT_CELLS`, …) appear in the
+   **Anomalies & diagnostics** panel after the run. An all-missing field
+   therefore produces purple `NaN` cells plus a `NO_VALID_SAMPLES` error,
+   never a grid of zeros.
+
 ### Display versus data
 
 Contrast mapping is strictly separated from the saved data:
@@ -104,6 +143,11 @@ source, and the output footprints collect the entire usable source area.
 ---
 
 ## 3. Missing data, NaN and true zeros
+
+These rules are the maintained validity contract, with runnable examples and
+independent checks in [`docs/VALIDITY-CONTRACT.md`](docs/VALIDITY-CONTRACT.md)
+and [`docs/contract/`](docs/contract/README.md). No data is ever defaulted to
+zero — not in the engine, not in serialized output, and not in the validator.
 
 The engine keeps three states strictly apart:
 
@@ -218,25 +262,50 @@ Options: `--extent x0,y0,x1,y1`, `--mode mean|sum`, `--compensate`,
 `--pixel-area N`, `--low-coverage T`, `--dtype float32|float64`. Run
 `node src/cli/resample.js --help` for the full list.
 
-The CLI writes the same five files as the GUI (`intensity.npy`,
-`coverage.npy`, `valid_weight.npy`, `cells.csv`, `meta.json`) and prints the
-same anomaly list. It never renders a display image.
+The CLI writes five files (`intensity.npy`, `coverage.npy`,
+`valid_weight.npy`, `cells.csv`, `meta.json`) and prints the same anomaly
+list as the GUI. The GUI additionally offers the float32 NPY and float32
+TIFF downloads listed in §5. The CLI never renders a display image.
 
 ---
 
-## 7. Tests
+## 7. Tests and contract checks
 
 ```bash
-npm test          # core, I/O, controller, CLI, server  (51 tests)
-npm run verify    # reference error report over all cases
-npm run test:ui   # real-browser end-to-end suite     (22 checks)
+npm test                 # node:test suites (core, I/O, controller, CLI, server, contract)
+npm run verify           # reference error report over all bundled cases
+npm run contract:check   # validity-contract scenarios (sparse valid region, all missing)
+npm run test:ui          # real-browser end-to-end suite (Playwright + Chromium)
 ```
 
+The exact number of tests is printed by each runner at the end of its run;
+counts are deliberately not hard-coded here so the prose cannot go stale.
 The core suite covers constant fields, known integrals, partial masks,
 true-zero-versus-missing, fractional pixel offsets, extreme dynamic range,
 reference agreement across grids/masks/modes, and invalid inputs. The I/O suite
 covers NPY (little/big endian, Fortran order, 2-D and singleton-dim shapes) and
 TIFF (float32/64, uint8/16, int32, multi-strip, compressed rejection).
+`test/contract.test.js` covers the validity contract and the float sample
+validator, including a deliberately zero-filled sample that the validator must
+reject.
+
+### Validity contract and runnable examples
+
+The written conventions for missing values, coverage weights and numeric
+normalization live in
+[`docs/VALIDITY-CONTRACT.md`](docs/VALIDITY-CONTRACT.md). The runnable
+examples under [`docs/contract/`](docs/contract/README.md) — SVG panels and
+full-precision numeric tables — are regenerated together by
+`npm run contract:example`; per-artifact hashes in `manifest.json` prove the
+image and the table come from the same run. Float artifacts of any run can be
+audited with:
+
+```bash
+npm run validate:samples -- path/to/run-output
+```
+
+The validator never substitutes a default for a missing file or value; a
+no-data cell written as zero fails the validation.
 
 ---
 

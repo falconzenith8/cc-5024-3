@@ -10,7 +10,10 @@
     "test": "node --test test/*.test.js",
     "test:ui": "node test/ui/run-ui-test.js",
     "examples": "node tools/generate-examples.js",
-    "verify": "node tools/verify-cases.js"
+    "verify": "node tools/verify-cases.js",
+    "contract:example": "node tools/contract/generate.js",
+    "contract:check": "node tools/contract/check.js",
+    "validate:samples": "node tools/validate-float-samples.js"
   },
   "engines": {
     "node": ">=20"

@@ -20,13 +20,21 @@ src/ui/
 
 src/cli/resample.js   auxiliary command-line entry
 tools/
-  serve.js            static server (GUI)
-  generate-examples.js regenerate cases/
-  verify-cases.js     reference-error report
+  serve.js                       static server (GUI)
+  generate-examples.js           regenerate cases/
+  verify-cases.js                reference-error report
+  validate-float-samples.js      float artifact validator CLI
+  validate-float-samples.lib.js  validator rules (shared with tests)
+  contract/
+    scenarios.js    validity-contract scenarios + independent overlap model
+    run-checks.js   pure contract assertions (shared by CLI and tests)
+    check.js        contract maintenance CLI (`npm run contract:check`)
+    generate.js     emits docs/contract SVG/CSV/JSON + hash manifest
 test/
   core.test.js        engine invariants
   io.test.js          NPY/TIFF round-trips
   controller.test.js  UI state and display separation
+  contract.test.js    validity contract + float sample validator
   cli.test.js         CLI behaviour
   server.test.js      HTTP serving
   ui/run-ui-test.js   Playwright end-to-end suite
@@ -71,5 +79,18 @@ Conservation is asserted only under verifiable conditions (see README §2).
 
 * Weighted totals: Neumaier compensated summation.
 * Weighted mean: West's incremental update, exact for constant fields.
-* Undefined cells are `NaN`; the `defined` flag marks them.
+* Undefined cells are `NaN`; the `defined` flag marks them. Missing data is
+  never replaced by zero, and no-data summary scalars are `NaN`/`null` rather
+  than zero defaults (see `docs/VALIDITY-CONTRACT.md`).
 * `OUTPUT_OVERFLOW` is raised if a finite computation still overflows.
+
+## Validity contract tooling
+
+`tools/contract/scenarios.js` holds the canonical missing-data scenarios
+(local missing, sparse valid region, all missing) and an independent
+unit-square overlap recomputation. `run-checks.js` drives the production
+`resample()` kernel and asserts every invariant; `check.js` is the
+maintenance entry and `generate.js` emits the runnable examples under
+`docs/contract/` with a hash manifest tying each SVG to its numeric table.
+The float sample validator (`tools/validate-float-samples.lib.js`) audits
+serialized run outputs and rejects any zero-filled no-data cell.

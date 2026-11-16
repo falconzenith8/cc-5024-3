@@ -8,7 +8,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { parseNpy, writeNpy } from '../src/core/npy.js';
-import { resample, describeResult } from '../src/core/resample.js';
+import { resample } from '../src/core/resample.js';
 import { referenceResampleExact, maxAbsDiff, maxRelDiff } from '../src/core/reference.js';
 import { resultToCsv, resultToJson } from '../src/core/output.js';
 

@@ -1,0 +1,175 @@
+{
+  "generatedBy": "tools/contract/generate.js",
+  "scenarios": [
+    {
+      "id": "partial-missing",
+      "title": "Local missing data: true zero, hole, masked non-zero and NaN in one row",
+      "files": {
+        "scenario-partial-missing.svg": {
+          "bytes": 2877,
+          "sha256": "0d8359497d79b198babf38544cb1477b843b88f2b0ebde10f4415bc3b8bc4720"
+        },
+        "scenario-partial-missing.csv": {
+          "bytes": 90,
+          "sha256": "8652d58867c1085d008719e821b990dd99ad78add3ccb54f478e27cc20f5b73f"
+        },
+        "scenario-partial-missing.json": {
+          "bytes": 2019,
+          "sha256": "5cd9c575d3208fefa504d68e535036a885aab2402cabced24ad1f5c054ff8c7a"
+        }
+      },
+      "evidence": {
+        "scenario": "partial-missing",
+        "validPixels": 2,
+        "sourcePixels": 4,
+        "validTrueZeros": 1,
+        "maskedNonFinite": 1,
+        "excludedNonZero": 1,
+        "totalOverlapArea": 2,
+        "sourceCoverage": 1,
+        "undefinedCells": 0,
+        "sourceMean": 20,
+        "outputMean": 20,
+        "cells": [
+          {
+            "x": 0,
+            "y": 0,
+            "intensity": 0,
+            "coverage": 0.5,
+            "validWeight": 1,
+            "overlapSum": 0,
+            "defined": true
+          },
+          {
+            "x": 1,
+            "y": 0,
+            "intensity": 40,
+            "coverage": 0.5,
+            "validWeight": 1,
+            "overlapSum": 40,
+            "defined": true
+          }
+        ],
+        "anomalies": [
+          "NONFINITE_MARKED_VALID",
+          "NONZERO_MASKED_OUT",
+          "LOW_COVERAGE"
+        ]
+      }
+    },
+    {
+      "id": "sparse-valid-region",
+      "title": "Sparse valid region: one usable cell next to an entirely empty cell",
+      "files": {
+        "scenario-sparse-valid-region.svg": {
+          "bytes": 2871,
+          "sha256": "0cdcaedf58aa61f88ea7faae171feb838c756c0d69e136928838c83e8db4cafe"
+        },
+        "scenario-sparse-valid-region.csv": {
+          "bytes": 88,
+          "sha256": "2e41ce110e6ef95587cf5755bde40180d85eb66522d204cbea8f2196fe199458"
+        },
+        "scenario-sparse-valid-region.json": {
+          "bytes": 1997,
+          "sha256": "a50fc1e07ccb455cd0beb75d9c1da6da8049e6da3464a8a882bd5feb69fd6336"
+        }
+      },
+      "evidence": {
+        "scenario": "sparse-valid-region",
+        "validPixels": 1,
+        "sourcePixels": 4,
+        "validTrueZeros": 0,
+        "maskedNonFinite": 0,
+        "excludedNonZero": 3,
+        "totalOverlapArea": 1,
+        "sourceCoverage": 1,
+        "undefinedCells": 1,
+        "sourceMean": 9,
+        "outputMean": 9,
+        "cells": [
+          {
+            "x": 0,
+            "y": 0,
+            "intensity": null,
+            "coverage": 0,
+            "validWeight": 0,
+            "overlapSum": 0,
+            "defined": false
+          },
+          {
+            "x": 1,
+            "y": 0,
+            "intensity": 9,
+            "coverage": 0.5,
+            "validWeight": 1,
+            "overlapSum": 9,
+            "defined": true
+          }
+        ],
+        "anomalies": [
+          "NONZERO_MASKED_OUT",
+          "UNDEFINED_OUTPUT_CELLS",
+          "LOW_COVERAGE"
+        ]
+      }
+    },
+    {
+      "id": "all-missing",
+      "title": "All missing: every output cell is NaN with coverage 0, never zero",
+      "files": {
+        "scenario-all-missing.svg": {
+          "bytes": 2849,
+          "sha256": "53da72e64c898f22307da19adbf8a8bea967a3e84490aa9a6f93b26bf1916f0e"
+        },
+        "scenario-all-missing.csv": {
+          "bytes": 88,
+          "sha256": "365dc1d41e27c10211e1095deec0d4d1e79164bc8e7b350f6e491b6e0f9e4dd6"
+        },
+        "scenario-all-missing.json": {
+          "bytes": 2347,
+          "sha256": "0d4de05c1a5781073284f7abb04d00544596f6ef186d63fcb336c2740866c997"
+        }
+      },
+      "evidence": {
+        "scenario": "all-missing",
+        "validPixels": 0,
+        "sourcePixels": 4,
+        "validTrueZeros": 0,
+        "maskedNonFinite": 2,
+        "excludedNonZero": 2,
+        "totalOverlapArea": 0,
+        "sourceCoverage": 0,
+        "undefinedCells": 2,
+        "sourceMean": null,
+        "outputMean": null,
+        "cells": [
+          {
+            "x": 0,
+            "y": 0,
+            "intensity": null,
+            "coverage": 0,
+            "validWeight": 0,
+            "overlapSum": 0,
+            "defined": false
+          },
+          {
+            "x": 1,
+            "y": 0,
+            "intensity": null,
+            "coverage": 0,
+            "validWeight": 0,
+            "overlapSum": 0,
+            "defined": false
+          }
+        ],
+        "anomalies": [
+          "NO_VALID_SAMPLES",
+          "NONFINITE_MARKED_VALID",
+          "NONZERO_MASKED_OUT",
+          "UNDEFINED_OUTPUT_CELLS",
+          "LOW_COVERAGE"
+        ]
+      }
+    }
+  ]
+}

@@ -1,11 +1,6 @@
 // Mask helpers: creation, import validation and source→output coverage
 // projection for the "effective area" selection layer.
 
-export const MASK_STATE = {
-  VALID: 255,
-  INVALID: 0,
-};
-
 /** Create a mask filled with 1 (everything usable). */
 export function createMask(width, height, value = 1) {
   const m = new Uint8Array(width * height);

@@ -1,0 +1,110 @@
+{
+  "scenario": "all-missing",
+  "title": "All missing: every output cell is NaN with coverage 0, never zero",
+  "source": {
+    "width": 4,
+    "height": 1,
+    "values": [
+      1,
+      2,
+      "nan",
+      "nan"
+    ],
+    "mask": [
+      0,
+      0,
+      1,
+      1
+    ]
+  },
+  "grid": {
+    "width": 2,
+    "height": 1,
+    "extent": [
+      0,
+      0,
+      4,
+      1
+    ],
+    "mode": "mean"
+  },
+  "stats": {
+    "sourceWidth": 4,
+    "sourceHeight": 1,
+    "sourcePixels": 4,
+    "validPixels": 0,
+    "missingPixels": 4,
+    "validTrueZeros": 0,
+    "maskedNonFinite": 2,
+    "excludedNonZero": 2,
+    "excludedNonFinite": 0,
+    "finitePixels": 2,
+    "validMin": null,
+    "validMax": null,
+    "finiteMin": 1,
+    "finiteMax": 2,
+    "sourceMean": null,
+    "sourceValidSum": 0,
+    "outputMean": null,
+    "outputOverlapSum": 0,
+    "outputIntegral": null,
+    "totalOverlapArea": 0,
+    "sourceValidArea": 0,
+    "sourceCoverage": 0,
+    "partitionsUsableSource": false,
+    "outputCells": 2,
+    "undefinedCells": 2,
+    "lowCoverageCells": 2,
+    "fullyCoveredCells": 0,
+    "lowCoverageThreshold": 0.5,
+    "footprintArea": 2,
+    "integralConserved": false
+  },
+  "anomalies": [
+    {
+      "code": "NO_VALID_SAMPLES",
+      "severity": "error",
+      "message": "No usable samples: every source pixel is masked out or non-finite."
+    },
+    {
+      "code": "NONFINITE_MARKED_VALID",
+      "severity": "warning",
+      "message": "2 masked-in source pixel(s) hold NaN/Infinity and were treated as missing."
+    },
+    {
+      "code": "NONZERO_MASKED_OUT",
+      "severity": "info",
+      "message": "2 non-zero source pixel(s) are masked out and excluded from all statistics."
+    },
+    {
+      "code": "UNDEFINED_OUTPUT_CELLS",
+      "severity": "warning",
+      "message": "2 output cell(s) have no usable overlap and are NaN (not zero)."
+    },
+    {
+      "code": "LOW_COVERAGE",
+      "severity": "warning",
+      "message": "2 output cell(s) have coverage below 0.5."
+    }
+  ],
+  "cells": [
+    {
+      "x": 0,
+      "y": 0,
+      "intensity": "nan",
+      "coverage": 0,
+      "validWeight": 0,
+      "overlapSum": 0,
+      "defined": false
+    },
+    {
+      "x": 1,
+      "y": 0,
+      "intensity": "nan",
+      "coverage": 0,
+      "validWeight": 0,
+      "overlapSum": 0,
+      "defined": false
+    }
+  ]
+}

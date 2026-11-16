@@ -11,6 +11,12 @@ import { createMask, maskFromShapes } from '../src/core/mask.js';
 
 const OUT = path.join(process.cwd(), 'cases');
 
+// Honour SOURCE_DATE_EPOCH for reproducible fixture metadata; fall back to
+// the current time only for ad-hoc local regeneration.
+const timestamp = process.env.SOURCE_DATE_EPOCH
+  ? new Date(Number(process.env.SOURCE_DATE_EPOCH) * 1000).toISOString()
+  : new Date().toISOString();
+
 function writeCase(name, description, generator) {
   const dir = path.join(OUT, name);
   fs.mkdirSync(dir, { recursive: true });
@@ -31,7 +37,7 @@ function writeCase(name, description, generator) {
     expected: spec.expected,
     gridSuggestion: spec.gridSuggestion,
     semanticsSuggestion: spec.semanticsSuggestion,
-    createdAt: new Date().toISOString(),
+    createdAt: timestamp,
   };
   fs.writeFileSync(path.join(dir, 'case.json'), JSON.stringify(meta, null, 2) + '\n');
   return meta;
@@ -163,7 +169,6 @@ cases.push(writeCase('float32-tiff', 'Same spot field saved as uncompressed floa
     }
   }
   // Write a parallel float32 TIFF (the .npy stays float64 for recomputation).
-  setTimeout(() => {}, 0);
   return {
     width: w, height: h, values,
     gridSuggestion: { width: 12, height: 12 },
@@ -197,7 +202,7 @@ fs.writeFileSync(
     {
       note:
         'All cases are synthetic. They exercise resampling behaviour only and support no biological interpretation.',
-      generatedAt: new Date().toISOString(),
+      generatedAt: timestamp,
       cases: cases.map((c) => ({
         name: c.case,
         description: c.description,

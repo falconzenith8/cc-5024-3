@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="864" height="194" viewBox="0 0 864 194">
+<rect x="0" y="0" width="864" height="194" fill="#1e1e1e" />
+<text x="24" y="20" font-family="monospace" font-size="15" font-weight="700" fill="#e6e6e6">partial-missing</text>
+<text x="24" y="34" font-family="monospace" font-size="12" font-weight="700" fill="#e6e6e6">source state</text>
+<rect x="24" y="42" width="62" height="62" fill="#3a6ea5" stroke="#111" stroke-width="1"/>
+<text x="30" y="62" font-family="monospace" font-size="11" fill="#e6e6e6">0</text>
+<rect x="88" y="42" width="62" height="62" fill="#c8403a" stroke="#111" stroke-width="1"/>
+<text x="94" y="62" font-family="monospace" font-size="11" fill="#e6e6e6">mask</text>
+<rect x="152" y="42" width="62" height="62" fill="#e0a030" stroke="#111" stroke-width="1"/>
+<text x="158" y="62" font-family="monospace" font-size="11" fill="#e6e6e6">nan</text>
+<rect x="216" y="42" width="62" height="62" fill="#4a4a4a" stroke="#111" stroke-width="1"/>
+<text x="222" y="62" font-family="monospace" font-size="11" fill="#e6e6e6">40</text>
+<text x="304" y="34" font-family="monospace" font-size="12" font-weight="700" fill="#e6e6e6">float field</text>
+<rect x="304" y="42" width="62" height="62" fill="rgb(40,40,40)" stroke="#111" stroke-width="1"/>
+<text x="310" y="62" font-family="monospace" font-size="11" fill="#e6e6e6">0</text>
+<rect x="368" y="42" width="62" height="62" fill="rgb(240,240,240)" stroke="#111" stroke-width="1"/>
+<text x="374" y="62" font-family="monospace" font-size="11" fill="#e6e6e6">40</text>
+<text x="584" y="34" font-family="monospace" font-size="12" font-weight="700" fill="#e6e6e6">coverage</text>
+<rect x="584" y="42" width="62" height="62" fill="rgb(130,148,40)" stroke="#111" stroke-width="1"/>
+<text x="590" y="62" font-family="monospace" font-size="11" fill="#e6e6e6">0.500</text>
+<rect x="648" y="42" width="62" height="62" fill="rgb(130,148,40)" stroke="#111" stroke-width="1"/>
+<text x="654" y="62" font-family="monospace" font-size="11" fill="#e6e6e6">0.500</text>
+<rect x="24" y="124" width="14" height="14" fill="#3a6ea5" />
+<text x="42" y="135" font-family="monospace" font-size="11" fill="#e6e6e6">valid true zero</text>
+<rect x="154" y="124" width="14" height="14" fill="#4a4a4a" />
+<text x="172" y="135" font-family="monospace" font-size="11" fill="#e6e6e6">valid finite</text>
+<rect x="262.4" y="124" width="14" height="14" fill="#e0a030" />
+<text x="280.4" y="135" font-family="monospace" font-size="11" fill="#e6e6e6">NaN/Inf -&gt; missing</text>
+<rect x="414" y="124" width="14" height="14" fill="#c8403a" />
+<text x="432" y="135" font-family="monospace" font-size="11" fill="#e6e6e6">masked out</text>
+<rect x="508" y="124" width="14" height="14" fill="#7860a0" />
+<text x="526" y="135" font-family="monospace" font-size="11" fill="#e6e6e6">undefined output (NaN, not 0)</text>
+</svg>

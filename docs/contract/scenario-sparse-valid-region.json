@@ -1,0 +1,100 @@
+{
+  "scenario": "sparse-valid-region",
+  "title": "Sparse valid region: one usable cell next to an entirely empty cell",
+  "source": {
+    "width": 4,
+    "height": 1,
+    "values": [
+      7,
+      7,
+      9,
+      7
+    ],
+    "mask": [
+      0,
+      0,
+      1,
+      0
+    ]
+  },
+  "grid": {
+    "width": 2,
+    "height": 1,
+    "extent": [
+      0,
+      0,
+      4,
+      1
+    ],
+    "mode": "mean"
+  },
+  "stats": {
+    "sourceWidth": 4,
+    "sourceHeight": 1,
+    "sourcePixels": 4,
+    "validPixels": 1,
+    "missingPixels": 3,
+    "validTrueZeros": 0,
+    "maskedNonFinite": 0,
+    "excludedNonZero": 3,
+    "excludedNonFinite": 0,
+    "finitePixels": 4,
+    "validMin": 9,
+    "validMax": 9,
+    "finiteMin": 7,
+    "finiteMax": 9,
+    "sourceMean": 9,
+    "sourceValidSum": 9,
+    "outputMean": 9,
+    "outputOverlapSum": 9,
+    "outputIntegral": null,
+    "totalOverlapArea": 1,
+    "sourceValidArea": 1,
+    "sourceCoverage": 1,
+    "partitionsUsableSource": true,
+    "outputCells": 2,
+    "undefinedCells": 1,
+    "lowCoverageCells": 2,
+    "fullyCoveredCells": 0,
+    "lowCoverageThreshold": 0.6,
+    "footprintArea": 2,
+    "integralConserved": false
+  },
+  "anomalies": [
+    {
+      "code": "NONZERO_MASKED_OUT",
+      "severity": "info",
+      "message": "3 non-zero source pixel(s) are masked out and excluded from all statistics."
+    },
+    {
+      "code": "UNDEFINED_OUTPUT_CELLS",
+      "severity": "warning",
+      "message": "1 output cell(s) have no usable overlap and are NaN (not zero)."
+    },
+    {
+      "code": "LOW_COVERAGE",
+      "severity": "warning",
+      "message": "2 output cell(s) have coverage below 0.6."
+    }
+  ],
+  "cells": [
+    {
+      "x": 0,
+      "y": 0,
+      "intensity": "nan",
+      "coverage": 0,
+      "validWeight": 0,
+      "overlapSum": 0,
+      "defined": false
+    },
+    {
+      "x": 1,
+      "y": 0,
+      "intensity": 9,
+      "coverage": 0.5,
+      "validWeight": 1,
+      "overlapSum": 9,
+      "defined": true
+    }
+  ]
+}

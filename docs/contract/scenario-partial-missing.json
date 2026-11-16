@@ -1,0 +1,100 @@
+{
+  "scenario": "partial-missing",
+  "title": "Local missing data: true zero, hole, masked non-zero and NaN in one row",
+  "source": {
+    "width": 4,
+    "height": 1,
+    "values": [
+      0,
+      55,
+      "nan",
+      40
+    ],
+    "mask": [
+      1,
+      0,
+      1,
+      1
+    ]
+  },
+  "grid": {
+    "width": 2,
+    "height": 1,
+    "extent": [
+      0,
+      0,
+      4,
+      1
+    ],
+    "mode": "mean"
+  },
+  "stats": {
+    "sourceWidth": 4,
+    "sourceHeight": 1,
+    "sourcePixels": 4,
+    "validPixels": 2,
+    "missingPixels": 2,
+    "validTrueZeros": 1,
+    "maskedNonFinite": 1,
+    "excludedNonZero": 1,
+    "excludedNonFinite": 0,
+    "finitePixels": 3,
+    "validMin": 0,
+    "validMax": 40,
+    "finiteMin": 0,
+    "finiteMax": 55,
+    "sourceMean": 20,
+    "sourceValidSum": 40,
+    "outputMean": 20,
+    "outputOverlapSum": 40,
+    "outputIntegral": null,
+    "totalOverlapArea": 2,
+    "sourceValidArea": 2,
+    "sourceCoverage": 1,
+    "partitionsUsableSource": true,
+    "outputCells": 2,
+    "undefinedCells": 0,
+    "lowCoverageCells": 2,
+    "fullyCoveredCells": 0,
+    "lowCoverageThreshold": 0.6,
+    "footprintArea": 2,
+    "integralConserved": false
+  },
+  "anomalies": [
+    {
+      "code": "NONFINITE_MARKED_VALID",
+      "severity": "warning",
+      "message": "1 masked-in source pixel(s) hold NaN/Infinity and were treated as missing."
+    },
+    {
+      "code": "NONZERO_MASKED_OUT",
+      "severity": "info",
+      "message": "1 non-zero source pixel(s) are masked out and excluded from all statistics."
+    },
+    {
+      "code": "LOW_COVERAGE",
+      "severity": "warning",
+      "message": "2 output cell(s) have coverage below 0.6."
+    }
+  ],
+  "cells": [
+    {
+      "x": 0,
+      "y": 0,
+      "intensity": 0,
+      "coverage": 0.5,
+      "validWeight": 1,
+      "overlapSum": 0,
+      "defined": true
+    },
+    {
+      "x": 1,
+      "y": 0,
+      "intensity": 40,
+      "coverage": 0.5,
+      "validWeight": 1,
+      "overlapSum": 40,
+      "defined": true
+    }
+  ]
+}

@@ -802,6 +802,11 @@ window.__resampler = {
   getDisplay: () => lastDisplay,
 };
 
+// Controller entry points used by the contract UI steps. The page drives the
+// same functions as every other interaction; there is no test-only numeric
+// path.
+window.__resamplerCore = { setImage, setMask, createState };
+
 window.addEventListener('resize', () => {
   if (lastDisplay) renderAll();
 });

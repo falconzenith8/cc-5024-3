@@ -389,32 +389,3 @@ export function resample(opts) {
     algorithm: ALGORITHM,
   };
 }
-
-/**
- * Serialize a result's per-cell arrays into the JSON-able metadata document.
- * Per-cell arrays are intentionally not included; they are written as .npy.
- */
-export function describeResult(result, extra = {}) {
-  return {
-    format: 'quantitative-float-resample/v1',
-    algorithm: result.algorithm,
-    grid: {
-      width: result.width,
-      height: result.height,
-      extent: result.extent,
-      scaleX: result.scaleX,
-      scaleY: result.scaleY,
-      footprintArea: result.footprintArea,
-    },
-    semantics: {
-      mode: result.mode,
-      compensate: result.compensate,
-      quantity: result.quantity,
-      quantityUnits: result.quantityUnits,
-      sourcePixelArea: result.sourcePixelArea,
-    },
-    stats: result.stats,
-    anomalies: result.anomalies,
-    ...extra,
-  };
-}
